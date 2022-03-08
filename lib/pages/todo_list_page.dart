@@ -1,8 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class TodoListPage extends StatelessWidget {
-  const TodoListPage({Key? key}) : super(key: key);
+class TodoListPage extends StatefulWidget {
+  TodoListPage({Key? key}) : super(key: key);
+
+  @override
+  State<TodoListPage> createState() => _TodoListPageState();
+}
+
+class _TodoListPageState extends State<TodoListPage> {
+  //controller para pegar o que o usuario digitar de tarefa
+  final TextEditingController todoController = TextEditingController();
+
+  List<String> todos = [];
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +28,8 @@ class TodoListPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: todoController,
+                        decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Adicione uma tarefa',
                         hintText: 'Ex. Estudar flutter',
@@ -31,7 +42,14 @@ class TodoListPage extends StatelessWidget {
 
                   //butão desing e função
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      String text = todoController.text;
+                      setState(() {
+                        todos.add(text);
+                      });
+                      todoController.clear();
+
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.green,
                       padding: EdgeInsets.all(14),
@@ -45,14 +63,23 @@ class TodoListPage extends StatelessWidget {
               ),
               SizedBox(height: 16,),
               //lista de tarefas
-              ListView(
-                //shirnkwrap regula o tamanho da tela da lista
-                shrinkWrap: true,
-                children: [
-                  ListTile(
+              Flexible(
+                child: ListView(
+                  //shirnkwrap regula o tamanho da tela da lista
+                  shrinkWrap: true,
+                  children: [
+                    for (String todo in todos)
+                    ListTile(
+                      title: Text(todo),
+                      subtitle: Text('07/03/2022'),
+                      leading: Icon(Icons.save, size:30,),
+                      onTap: (){
+                        print('Tarefa: $todo');
+                      },
 
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
               SizedBox(height: 16,),
               Row(
