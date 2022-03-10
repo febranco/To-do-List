@@ -80,6 +80,7 @@ class _TodoListPageState extends State<TodoListPage> {
                       for (Todo todo in todos)
                         TodoListItem(
                           todo: todo,
+                          onDelete: onDelete,
 
                         ),
 
@@ -108,6 +109,21 @@ class _TodoListPageState extends State<TodoListPage> {
           ),
         ),
       ),
+    );
+  }
+  void onDelete(Todo todo){
+    setState(() {
+      todos.remove(todo);
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Tarefa ${todo.title} foi removida com sucesso!',
+        style: TextStyle(
+            color: Color(0xff060708),
+        ),
+          ),
+        backgroundColor: Colors.white,
+      )
     );
   }
 }
