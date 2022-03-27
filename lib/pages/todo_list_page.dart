@@ -15,6 +15,8 @@ class _TodoListPageState extends State<TodoListPage> {
   final TextEditingController todoController = TextEditingController();
 
   List<Todo> todos = [];
+  Todo? DeletedTodo;
+  int? DeletedTodoPos;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class _TodoListPageState extends State<TodoListPage> {
                     Expanded(
                       child: TextField(
                         controller: todoController,
-                          decoration: InputDecoration(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Adicione uma tarefa',
                           hintText: 'Ex. Estudar flutter',
@@ -56,7 +58,6 @@ class _TodoListPageState extends State<TodoListPage> {
                           todos.add(newTodo);
                         });
                         todoController.clear();
-
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.green,
@@ -69,7 +70,9 @@ class _TodoListPageState extends State<TodoListPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16,),
+                SizedBox(
+                  height: 16,
+                ),
                 //lista de tarefas
                 Flexible(
                   child: ListView(
@@ -81,19 +84,18 @@ class _TodoListPageState extends State<TodoListPage> {
                         TodoListItem(
                           todo: todo,
                           onDelete: onDelete,
-
                         ),
-
                     ],
                   ),
                 ),
-                SizedBox(height: 16,),
+                SizedBox(
+                  height: 16,
+                ),
                 Row(
                   children: [
-                    Expanded(child: Text(
-                        'Você possui ${todos.length} tarefa pendente'
-                     )
-                    ),
+                    Expanded(
+                        child: Text(
+                            'Você possui ${todos.length} tarefa pendente')),
                     ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
@@ -111,19 +113,33 @@ class _TodoListPageState extends State<TodoListPage> {
       ),
     );
   }
-  void onDelete(Todo todo){
+
+  void onDelete(Todo todo) {
+    DeletedTodo = todo;
+    DeletedTodoPos = todos.indexOf(todo);
+
     setState(() {
       todos.remove(todo);
     });
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Tarefa ${todo.title} foi removida com sucesso!',
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(
+        'Tarefa ${todo.title} foi removida com sucesso!',
         style: TextStyle(
-            color: Color(0xff060708),
+          color: Color(0xff060708),
         ),
-          ),
-        backgroundColor: Colors.white,
-      )
-    );
+      ),
+      backgroundColor: Colors.white,
+      action: SnackBarAction(
+        label: 'Desfazer',
+        textColor: const Color(0xff00d7f3),
+        onPressed: () {
+          setState(() {
+            todos.insert(DeletedTodoPos!, DeletedTodo!);
+          });
+        },
+      ),
+      duration: const Duration(seconds: 5),
+    ));
   }
 }
