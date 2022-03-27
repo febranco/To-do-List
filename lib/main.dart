@@ -2,11 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:list/pages/todo_list_page.dart';
 
-void main(){
+void main() {
   runApp(MyApp());
-
-
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -14,11 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       home: TodoListPage(),
     );
   }
 }
-
-
-
